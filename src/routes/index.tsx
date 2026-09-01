@@ -1,24 +1,72 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, Settings, UtensilsCrossed } from "lucide-react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { AppShell } from "@/components/AppShell";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useStore } from "@/lib/store";
+
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Billo — Café Billing & Receipts" },
+      {
+        name: "description",
+        content:
+          "Billo is a fast offline billing app for Indian cafés and restaurants: menu, POS, 80mm thermal receipts and order history.",
+      },
+      { property: "og:title", content: "Billo — Café Billing & Receipts" },
+      {
+        property: "og:description",
+        content: "Fast billing, 80mm thermal receipts and order history for cafés in India.",
+      },
+    ],
+  }),
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Home() {
+  const { ready, business, menu } = useStore();
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
+    <AppShell
+      title={ready ? business.name : "Billo"}
+      description="Set up your business, then build your menu and start billing."
     >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Settings className="size-4 text-primary" /> Step 1 · Business settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Name, address, phone, FSSAI, footer text, tax components and bill/token
+              numbering — everything that prints on the receipt.
+            </p>
+            <Button asChild>
+              <Link to="/settings">
+                Open settings <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="opacity-70">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <UtensilsCrossed className="size-4 text-primary" /> Step 2 · Menu
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <p>
+              {menu.length} item{menu.length === 1 ? "" : "s"} so far. Menu, POS billing,
+              receipt preview and order history come next.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </AppShell>
   );
 }

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Settings, UtensilsCrossed } from "lucide-react";
+import { ArrowRight, Receipt, Settings, UtensilsCrossed } from "lucide-react";
 
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
@@ -67,6 +67,24 @@ function Home() {
             <Button asChild variant="secondary">
               <Link to="/menu">
                 Manage menu <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Receipt className="size-4 text-primary" /> Step 3 · Billing
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Tap items to build a bill, choose Dine In or Takeaway, apply a discount and
+              print an 80mm thermal receipt.
+            </p>
+            <Button asChild>
+              <Link to="/pos">
+                Start billing <ArrowRight className="size-4" />
               </Link>
             </Button>
           </CardContent>

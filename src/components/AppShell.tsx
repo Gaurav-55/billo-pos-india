@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { Receipt, Settings, Store } from "lucide-react";
+import { Receipt, Settings, Store, UtensilsCrossed } from "lucide-react";
 import type { ReactNode } from "react";
 
 const nav = [
   { to: "/", label: "Home", icon: Receipt },
+  { to: "/menu", label: "Menu", icon: UtensilsCrossed },
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 

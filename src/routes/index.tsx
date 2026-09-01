@@ -53,17 +53,22 @@ function Home() {
           </CardContent>
         </Card>
 
-        <Card className="opacity-70">
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <UtensilsCrossed className="size-4 text-primary" /> Step 2 · Menu
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>
-              {menu.length} item{menu.length === 1 ? "" : "s"} so far. Menu, POS billing,
-              receipt preview and order history come next.
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              {menu.length} item{menu.length === 1 ? "" : "s"} so far. Add items, prices
+              and variants — POS billing and receipts come next.
             </p>
+            <Button asChild variant="secondary">
+              <Link to="/menu">
+                Manage menu <ArrowRight className="size-4" />
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       </div>

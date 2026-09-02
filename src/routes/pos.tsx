@@ -118,8 +118,13 @@ function Pos() {
   /** Saves the bill first; printing never creates or loses a bill. */
   function saveBill(bill: Bill, status: Bill["status"]): Bill {
     const saved: Bill = { ...bill, status };
-    const exists = bills.some((b) => b.id === bill.id);
-    setBills(exists ? bills.map((b) => (b.id === bill.id ? saved : b)) : [saved, ...bills]);
+    const current = billsRef.current;
+    const exists = current.some((b) => b.id === bill.id);
+    const nextList = exists
+      ? current.map((b) => (b.id === bill.id ? saved : b))
+      : [saved, ...current];
+    billsRef.current = nextList;
+    setBills(nextList);
     if (!exists) saveBusiness(consumeNumbers(business).business);
     return saved;
   }

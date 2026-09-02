@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Receipt, Settings, Store, UtensilsCrossed } from "lucide-react";
+import { History, Receipt, Settings, Store, UtensilsCrossed } from "lucide-react";
 import type { ReactNode } from "react";
 
 const nav = [

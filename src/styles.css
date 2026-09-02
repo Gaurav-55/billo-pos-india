@@ -182,20 +182,73 @@
     size: 80mm auto;
     margin: 0;
   }
-  body * {
-    visibility: hidden;
+
+  html,
+  body {
+    width: 80mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    overflow: visible !important;
+    height: auto !important;
   }
+
+  body * {
+    visibility: hidden !important;
+    box-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
   .receipt,
   .receipt * {
-    visibility: visible;
+    visibility: visible !important;
   }
+
+  /* Radix dialog chrome: drop the overlay, flatten the centered/scrolling panel
+     so the receipt flows as normal page content instead of a clipped box. */
+  [data-slot="dialog-overlay"],
+  [data-radix-dialog-overlay] {
+    display: none !important;
+  }
+
+  [data-slot="dialog-content"],
+  [role="dialog"] {
+    position: static !important;
+    transform: none !important;
+    inset: auto !important;
+    display: block !important;
+    width: 80mm !important;
+    max-width: none !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 0 !important;
+    background: #fff !important;
+  }
+
   .receipt {
-    position: absolute;
-    left: 0;
-    top: 0;
-    padding: 2mm 3mm;
+    position: static !important;
+    width: 80mm !important;
+    max-width: 80mm !important;
+    margin: 0 !important;
+    padding: 2mm 3mm !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
+
+  .receipt tr,
+  .receipt div {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
   .no-print {
     display: none !important;
   }
 }
+

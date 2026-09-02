@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Minus, Plus, Printer, Search, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
@@ -38,6 +38,10 @@ type CartLine = { key: string; name: string; unitPricePaise: number; qty: number
 
 function Pos() {
   const { ready, business, menu, bills, setBills, saveBusiness } = useStore();
+  const billsRef = useRef(bills);
+  useEffect(() => {
+    billsRef.current = bills;
+  }, [bills]);
   const [cart, setCart] = useState<CartLine[]>([]);
   const [query, setQuery] = useState("");
   const [orderType, setOrderType] = useState<"dine_in" | "takeaway">("dine_in");

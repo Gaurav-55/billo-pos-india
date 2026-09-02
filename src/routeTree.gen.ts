@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MenuRouteImport } from './routes/menu'
+import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as PosRouteImport } from './routes/pos'
 import { Route as SettingsRouteImport } from './routes/settings'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const MenuRoute = MenuRouteImport.update({
   id: '/menu',
   path: '/menu',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PosRoute = PosRouteImport.update({
@@ -38,12 +44,14 @@ const SettingsRoute = SettingsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/menu': typeof MenuRoute
+  '/orders': typeof OrdersRoute
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/menu': typeof MenuRoute
+  '/orders': typeof OrdersRoute
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
 }
@@ -51,20 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/menu': typeof MenuRoute
+  '/orders': typeof OrdersRoute
   '/pos': typeof PosRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/menu' | '/pos' | '/settings'
+  fullPaths: '/' | '/menu' | '/orders' | '/pos' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/menu' | '/pos' | '/settings'
-  id: '__root__' | '/' | '/menu' | '/pos' | '/settings'
+  to: '/' | '/menu' | '/orders' | '/pos' | '/settings'
+  id: '__root__' | '/' | '/menu' | '/orders' | '/pos' | '/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MenuRoute: typeof MenuRoute
+  OrdersRoute: typeof OrdersRoute
   PosRoute: typeof PosRoute
   SettingsRoute: typeof SettingsRoute
 }
@@ -83,6 +93,13 @@ declare module '@tanstack/react-router' {
       path: '/menu'
       fullPath: '/menu'
       preLoaderRoute: typeof MenuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pos': {
@@ -105,6 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MenuRoute: MenuRoute,
+  OrdersRoute: OrdersRoute,
   PosRoute: PosRoute,
   SettingsRoute: SettingsRoute,
 }

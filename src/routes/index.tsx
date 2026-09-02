@@ -26,7 +26,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { ready, business, menu } = useStore();
+  const { ready, business, menu, bills } = useStore();
 
   return (
     <AppShell

@@ -140,10 +140,16 @@ function Pos() {
 
   function handlePrint() {
     if (!preview) return;
-    saveBill(preview, "printed");
-    toast.success(`Bill ${preview.billNumber} saved — printing`);
+    // Saved first: a print failure can never lose or duplicate the bill.
+    const saved = saveBill(preview, "printed");
+    toast.success(`Bill ${saved.billNumber} saved — printing`);
     setTimeout(() => {
-      window.print();
+      try {
+        window.print();
+      } catch {
+        saveBill(saved, "print_failed");
+        toast.error(`Print failed for bill ${saved.billNumber} — reprint from Orders`);
+      }
       resetSale();
     }, 50);
   }

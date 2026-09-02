@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Minus, Plus, Printer, Search, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
@@ -38,6 +38,10 @@ type CartLine = { key: string; name: string; unitPricePaise: number; qty: number
 
 function Pos() {
   const { ready, business, menu, bills, setBills, saveBusiness } = useStore();
+  const billsRef = useRef(bills);
+  useEffect(() => {
+    billsRef.current = bills;
+  }, [bills]);
   const [cart, setCart] = useState<CartLine[]>([]);
   const [query, setQuery] = useState("");
   const [orderType, setOrderType] = useState<"dine_in" | "takeaway">("dine_in");
@@ -118,8 +122,13 @@ function Pos() {
   /** Saves the bill first; printing never creates or loses a bill. */
   function saveBill(bill: Bill, status: Bill["status"]): Bill {
     const saved: Bill = { ...bill, status };
-    const exists = bills.some((b) => b.id === bill.id);
-    setBills(exists ? bills.map((b) => (b.id === bill.id ? saved : b)) : [saved, ...bills]);
+    const current = billsRef.current;
+    const exists = current.some((b) => b.id === bill.id);
+    const nextList = exists
+      ? current.map((b) => (b.id === bill.id ? saved : b))
+      : [saved, ...current];
+    billsRef.current = nextList;
+    setBills(nextList);
     if (!exists) saveBusiness(consumeNumbers(business).business);
     return saved;
   }
@@ -140,10 +149,16 @@ function Pos() {
 
   function handlePrint() {
     if (!preview) return;
-    saveBill(preview, "printed");
-    toast.success(`Bill ${preview.billNumber} saved — printing`);
+    // Saved first: a print failure can never lose or duplicate the bill.
+    const saved = saveBill(preview, "printed");
+    toast.success(`Bill ${saved.billNumber} saved — printing`);
     setTimeout(() => {
-      window.print();
+      try {
+        window.print();
+      } catch {
+        saveBill(saved, "print_failed");
+        toast.error(`Print failed for bill ${saved.billNumber} — reprint from Orders`);
+      }
       resetSale();
     }, 50);
   }

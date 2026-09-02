@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Receipt, Settings, UtensilsCrossed } from "lucide-react";
+import { ArrowRight, History, Receipt, Settings, UtensilsCrossed } from "lucide-react";
 
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { ready, business, menu } = useStore();
+  const { ready, business, menu, bills } = useStore();
 
   return (
     <AppShell
@@ -85,6 +85,25 @@ function Home() {
             <Button asChild>
               <Link to="/pos">
                 Start billing <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <History className="size-4 text-primary" /> Step 4 · Orders history
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              {bills.length} bill{bills.length === 1 ? "" : "s"} saved. Search past orders
+              and reprint any receipt from its saved data.
+            </p>
+            <Button asChild variant="secondary">
+              <Link to="/orders">
+                View orders <ArrowRight className="size-4" />
               </Link>
             </Button>
           </CardContent>

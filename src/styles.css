@@ -199,6 +199,12 @@
     transition: none !important;
   }
 
+  /* Remove everything that is not the receipt (or one of its ancestors)
+     from the layout so hidden UI doesn't take space or add blank pages. */
+  body :not(:has(.receipt)):not(.receipt):not(.receipt *) {
+    display: none !important;
+  }
+
   .receipt,
   .receipt * {
     visibility: visible !important;

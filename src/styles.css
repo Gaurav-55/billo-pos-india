@@ -185,7 +185,6 @@
 
   html,
   body {
-    width: 80mm !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
@@ -198,6 +197,12 @@
     box-shadow: none !important;
     animation: none !important;
     transition: none !important;
+  }
+
+  /* Remove everything that is not the receipt (or one of its ancestors)
+     from the layout so hidden UI doesn't take space or add blank pages. */
+  body :not(:has(.receipt)):not(.receipt):not(.receipt *) {
+    display: none !important;
   }
 
   .receipt,
@@ -216,9 +221,10 @@
   [role="dialog"] {
     position: static !important;
     transform: none !important;
+    translate: none !important;
     inset: auto !important;
     display: block !important;
-    width: 80mm !important;
+    width: auto !important;
     max-width: none !important;
     max-height: none !important;
     height: auto !important;
@@ -235,7 +241,7 @@
     position: static !important;
     width: 80mm !important;
     max-width: 80mm !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
     padding: 2mm 3mm !important;
     page-break-inside: avoid;
     break-inside: avoid;

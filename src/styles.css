@@ -178,8 +178,11 @@
 }
 
 @media print {
+  /* Chrome ignores "80mm auto" (invalid) and falls back to A4/Letter.
+     An explicit 80mm x 297mm page is honoured by Save-as-PDF and by
+     thermal printer drivers, which cut the roll at the content end. */
   @page {
-    size: 80mm auto;
+    size: 80mm 297mm;
     margin: 0;
   }
 

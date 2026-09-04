@@ -218,7 +218,8 @@
   }
 
   [data-slot="dialog-content"],
-  [role="dialog"] {
+  [role="dialog"],
+  .receipt-dialog {
     position: static !important;
     transform: none !important;
     translate: none !important;

@@ -222,7 +222,7 @@
   .receipt-dialog {
     position: static !important;
     transform: none !important;
-    translate: none !important;
+    translate: 0 0 !important;
     inset: auto !important;
     display: block !important;
     width: auto !important;

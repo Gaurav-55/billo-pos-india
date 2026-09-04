@@ -335,7 +335,7 @@ function Pos() {
       </div>
 
       <Dialog open={!!preview} onOpenChange={(o) => !o && setPreview(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[420px]">
+        <DialogContent className="receipt-dialog max-h-[90vh] overflow-y-auto sm:max-w-[420px]">
           <DialogHeader className="no-print">
             <DialogTitle>Receipt preview</DialogTitle>
           </DialogHeader>

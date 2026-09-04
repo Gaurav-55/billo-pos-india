@@ -218,10 +218,13 @@
   }
 
   [data-slot="dialog-content"],
-  [role="dialog"] {
+  [role="dialog"],
+  .receipt-dialog {
     position: static !important;
     transform: none !important;
-    translate: none !important;
+    --tw-translate-x: 0 !important;
+    --tw-translate-y: 0 !important;
+    translate: 0 0 !important;
     inset: auto !important;
     display: block !important;
     width: auto !important;

@@ -156,7 +156,7 @@ function Orders() {
       )}
 
       <Dialog open={!!open} onOpenChange={(o) => !o && setOpen(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[420px]">
+        <DialogContent className="receipt-dialog max-h-[90vh] overflow-y-auto sm:max-w-[420px]">
           <DialogHeader className="no-print">
             <DialogTitle>Bill {open?.billNumber}</DialogTitle>
           </DialogHeader>

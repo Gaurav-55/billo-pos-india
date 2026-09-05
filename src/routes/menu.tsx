@@ -215,48 +215,62 @@ function MenuPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((item) => (
-            <Card key={item.id}>
-              <CardContent className="space-y-3 p-4">
-                <div className="flex items-start gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">{item.name}</p>
-                    <p className="font-mono text-sm text-muted-foreground">
-                      {formatMoney(item.pricePaise, currency)}
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={`Edit ${item.name}`}
-                    onClick={() => openEdit(item)}
-                  >
-                    <Pencil className="size-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={`Delete ${item.name}`}
-                    onClick={() => remove(item)}
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
-                </div>
-                {item.options.length > 0 ? (
-                  <ul className="space-y-1 border-t border-border pt-2">
-                    {item.options.map((o) => (
-                      <li key={o.id} className="flex justify-between text-sm">
-                        <span className="truncate text-muted-foreground">{o.name}</span>
-                        <span className="font-mono">
-                          {formatMoney(o.pricePaise, currency)}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </CardContent>
-            </Card>
+        <div className="space-y-8">
+          {grouped.map(([category, items]) => (
+            <section key={category}>
+              <h2 className="mb-3 font-heading text-lg font-semibold">
+                {category}{" "}
+                <span className="text-sm font-normal text-muted-foreground">
+                  ({items.length})
+                </span>
+              </h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((item) => (
+                  <Card key={item.id}>
+                    <CardContent className="space-y-3 p-4">
+                      <div className="flex items-start gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-medium">{item.name}</p>
+                          <p className="font-mono text-sm text-muted-foreground">
+                            {formatMoney(item.pricePaise, currency)}
+                          </p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`Edit ${item.name}`}
+                          onClick={() => openEdit(item)}
+                        >
+                          <Pencil className="size-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`Delete ${item.name}`}
+                          onClick={() => remove(item)}
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                      </div>
+                      {item.options.length > 0 ? (
+                        <ul className="space-y-1 border-t border-border pt-2">
+                          {item.options.map((o) => (
+                            <li key={o.id} className="flex justify-between text-sm">
+                              <span className="truncate text-muted-foreground">
+                                {o.name}
+                              </span>
+                              <span className="font-mono">
+                                {formatMoney(o.pricePaise, currency)}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       )}

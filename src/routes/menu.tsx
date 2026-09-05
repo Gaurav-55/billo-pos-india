@@ -173,6 +173,29 @@ function MenuPage() {
         </Button>
       </div>
 
+      {categories.length > 0 ? (
+        <div className="mb-5 flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant={activeCategory === "all" ? "default" : "outline"}
+            onClick={() => setActiveCategory("all")}
+          >
+            All items
+          </Button>
+          {categories.map((c) => (
+            <Button
+              key={c}
+              size="sm"
+              variant={activeCategory === c ? "default" : "outline"}
+              onClick={() => setActiveCategory(c)}
+            >
+              {c}
+            </Button>
+          ))}
+        </div>
+      ) : null}
+
+
       {filtered.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center gap-3 py-14 text-center">

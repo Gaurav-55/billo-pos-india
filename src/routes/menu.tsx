@@ -41,13 +41,17 @@ export const Route = createFileRoute("/menu")({
 type Draft = {
   id: string | null;
   name: string;
+  category: string;
   price: string;
   options: { id: string; name: string; price: string }[];
 };
 
+const UNCATEGORISED = "Uncategorised";
+
 const emptyDraft = (): Draft => ({
   id: null,
   name: "",
+  category: "",
   price: "",
   options: [],
 });
@@ -56,6 +60,7 @@ function toDraft(item: MenuItem): Draft {
   return {
     id: item.id,
     name: item.name,
+    category: item.category ?? "",
     price: paiseToRupeeString(item.pricePaise),
     options: item.options.map((o) => ({
       id: o.id,

@@ -135,6 +135,7 @@ function MenuPage() {
     const item: MenuItem = {
       id: draft.id ?? crypto.randomUUID(),
       name,
+      category: draft.category.trim(),
       pricePaise: rupeesToPaise(draft.price),
       options,
     };

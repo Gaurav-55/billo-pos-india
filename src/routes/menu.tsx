@@ -292,6 +292,27 @@ function MenuPage() {
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="item-category">Category</Label>
+              <Input
+                id="item-category"
+                list="menu-categories"
+                maxLength={40}
+                placeholder="Beverages"
+                value={draft.category}
+                onChange={(e) => setDraft((d) => ({ ...d, category: e.target.value }))}
+              />
+              <datalist id="menu-categories">
+                {categories
+                  .filter((c) => c !== UNCATEGORISED)
+                  .map((c) => (
+                    <option key={c} value={c} />
+                  ))}
+              </datalist>
+              <p className="text-xs text-muted-foreground">
+                Leave blank to keep the item under {UNCATEGORISED}.
+              </p>
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="item-price">Price ({currency})</Label>
               <Input
                 id="item-price"

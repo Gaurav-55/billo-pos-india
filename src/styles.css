@@ -243,12 +243,15 @@
     background: #fff !important;
   }
 
+  /* 80mm thermal printers (e.g. TENAX TN260) only print a 72mm band.
+     Fill whatever width the driver gives, but never exceed 72mm. */
   .receipt {
     position: static !important;
-    width: 80mm !important;
-    max-width: 80mm !important;
+    width: 100% !important;
+    max-width: 72mm !important;
     margin: 0 auto !important;
-    padding: 2mm 3mm !important;
+    padding: 0 1mm 4mm !important;
+    box-sizing: border-box !important;
     page-break-inside: avoid;
     break-inside: avoid;
   }

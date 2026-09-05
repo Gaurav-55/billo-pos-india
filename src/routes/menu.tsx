@@ -75,12 +75,38 @@ function MenuPage() {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    menu.forEach((i) => set.add(i.category?.trim() || UNCATEGORISED));
+    return [...set].sort((a, b) =>
+      a === UNCATEGORISED ? 1 : b === UNCATEGORISED ? -1 : a.localeCompare(b),
+    );
+  }, [menu]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     const sorted = [...menu].sort((a, b) => a.name.localeCompare(b.name));
-    return q ? sorted.filter((i) => i.name.toLowerCase().includes(q)) : sorted;
-  }, [menu, query]);
+    return sorted
+      .filter((i) => (q ? i.name.toLowerCase().includes(q) : true))
+      .filter((i) =>
+        activeCategory === "all"
+          ? true
+          : (i.category?.trim() || UNCATEGORISED) === activeCategory,
+      );
+  }, [menu, query, activeCategory]);
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, MenuItem[]>();
+    filtered.forEach((i) => {
+      const key = i.category?.trim() || UNCATEGORISED;
+      map.set(key, [...(map.get(key) ?? []), i]);
+    });
+    return [...map.entries()].sort(([a], [b]) =>
+      a === UNCATEGORISED ? 1 : b === UNCATEGORISED ? -1 : a.localeCompare(b),
+    );
+  }, [filtered]);
 
   function openNew() {
     setDraft(emptyDraft());

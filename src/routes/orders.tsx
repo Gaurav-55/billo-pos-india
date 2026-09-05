@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Printer, Search, Trash2 } from "lucide-react";
+import { FileSpreadsheet, Printer, Search, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { exportOrdersToExcel } from "@/lib/export-orders";
 import { formatMoney } from "@/lib/money";
 import { useStore } from "@/lib/store";
 import type { Bill } from "@/lib/types";

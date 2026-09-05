@@ -34,6 +34,8 @@ export type MenuItemOption = {
 export type MenuItem = {
   id: string;
   name: string;
+  /** Optional grouping, e.g. "Beverages". Empty means Uncategorised. */
+  category?: string;
   pricePaise: number;
   options: MenuItemOption[];
 };

@@ -41,13 +41,17 @@ export const Route = createFileRoute("/menu")({
 type Draft = {
   id: string | null;
   name: string;
+  category: string;
   price: string;
   options: { id: string; name: string; price: string }[];
 };
 
+const UNCATEGORISED = "Uncategorised";
+
 const emptyDraft = (): Draft => ({
   id: null,
   name: "",
+  category: "",
   price: "",
   options: [],
 });
@@ -56,6 +60,7 @@ function toDraft(item: MenuItem): Draft {
   return {
     id: item.id,
     name: item.name,
+    category: item.category ?? "",
     price: paiseToRupeeString(item.pricePaise),
     options: item.options.map((o) => ({
       id: o.id,
@@ -70,12 +75,38 @@ function MenuPage() {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    menu.forEach((i) => set.add(i.category?.trim() || UNCATEGORISED));
+    return [...set].sort((a, b) =>
+      a === UNCATEGORISED ? 1 : b === UNCATEGORISED ? -1 : a.localeCompare(b),
+    );
+  }, [menu]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     const sorted = [...menu].sort((a, b) => a.name.localeCompare(b.name));
-    return q ? sorted.filter((i) => i.name.toLowerCase().includes(q)) : sorted;
-  }, [menu, query]);
+    return sorted
+      .filter((i) => (q ? i.name.toLowerCase().includes(q) : true))
+      .filter((i) =>
+        activeCategory === "all"
+          ? true
+          : (i.category?.trim() || UNCATEGORISED) === activeCategory,
+      );
+  }, [menu, query, activeCategory]);
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, MenuItem[]>();
+    filtered.forEach((i) => {
+      const key = i.category?.trim() || UNCATEGORISED;
+      map.set(key, [...(map.get(key) ?? []), i]);
+    });
+    return [...map.entries()].sort(([a], [b]) =>
+      a === UNCATEGORISED ? 1 : b === UNCATEGORISED ? -1 : a.localeCompare(b),
+    );
+  }, [filtered]);
 
   function openNew() {
     setDraft(emptyDraft());
@@ -104,6 +135,7 @@ function MenuPage() {
     const item: MenuItem = {
       id: draft.id ?? crypto.randomUUID(),
       name,
+      category: draft.category.trim(),
       pricePaise: rupeesToPaise(draft.price),
       options,
     };
@@ -141,6 +173,29 @@ function MenuPage() {
         </Button>
       </div>
 
+      {categories.length > 0 ? (
+        <div className="mb-5 flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant={activeCategory === "all" ? "default" : "outline"}
+            onClick={() => setActiveCategory("all")}
+          >
+            All items
+          </Button>
+          {categories.map((c) => (
+            <Button
+              key={c}
+              size="sm"
+              variant={activeCategory === c ? "default" : "outline"}
+              onClick={() => setActiveCategory(c)}
+            >
+              {c}
+            </Button>
+          ))}
+        </div>
+      ) : null}
+
+
       {filtered.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center gap-3 py-14 text-center">
@@ -160,48 +215,62 @@ function MenuPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((item) => (
-            <Card key={item.id}>
-              <CardContent className="space-y-3 p-4">
-                <div className="flex items-start gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">{item.name}</p>
-                    <p className="font-mono text-sm text-muted-foreground">
-                      {formatMoney(item.pricePaise, currency)}
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={`Edit ${item.name}`}
-                    onClick={() => openEdit(item)}
-                  >
-                    <Pencil className="size-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={`Delete ${item.name}`}
-                    onClick={() => remove(item)}
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
-                </div>
-                {item.options.length > 0 ? (
-                  <ul className="space-y-1 border-t border-border pt-2">
-                    {item.options.map((o) => (
-                      <li key={o.id} className="flex justify-between text-sm">
-                        <span className="truncate text-muted-foreground">{o.name}</span>
-                        <span className="font-mono">
-                          {formatMoney(o.pricePaise, currency)}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </CardContent>
-            </Card>
+        <div className="space-y-8">
+          {grouped.map(([category, items]) => (
+            <section key={category}>
+              <h2 className="mb-3 font-heading text-lg font-semibold">
+                {category}{" "}
+                <span className="text-sm font-normal text-muted-foreground">
+                  ({items.length})
+                </span>
+              </h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((item) => (
+                  <Card key={item.id}>
+                    <CardContent className="space-y-3 p-4">
+                      <div className="flex items-start gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-medium">{item.name}</p>
+                          <p className="font-mono text-sm text-muted-foreground">
+                            {formatMoney(item.pricePaise, currency)}
+                          </p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`Edit ${item.name}`}
+                          onClick={() => openEdit(item)}
+                        >
+                          <Pencil className="size-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`Delete ${item.name}`}
+                          onClick={() => remove(item)}
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                      </div>
+                      {item.options.length > 0 ? (
+                        <ul className="space-y-1 border-t border-border pt-2">
+                          {item.options.map((o) => (
+                            <li key={o.id} className="flex justify-between text-sm">
+                              <span className="truncate text-muted-foreground">
+                                {o.name}
+                              </span>
+                              <span className="font-mono">
+                                {formatMoney(o.pricePaise, currency)}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       )}
@@ -221,6 +290,27 @@ function MenuPage() {
                 value={draft.name}
                 onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="item-category">Category</Label>
+              <Input
+                id="item-category"
+                list="menu-categories"
+                maxLength={40}
+                placeholder="Beverages"
+                value={draft.category}
+                onChange={(e) => setDraft((d) => ({ ...d, category: e.target.value }))}
+              />
+              <datalist id="menu-categories">
+                {categories
+                  .filter((c) => c !== UNCATEGORISED)
+                  .map((c) => (
+                    <option key={c} value={c} />
+                  ))}
+              </datalist>
+              <p className="text-xs text-muted-foreground">
+                Leave blank to keep the item under {UNCATEGORISED}.
+              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="item-price">Price ({currency})</Label>
